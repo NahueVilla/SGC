@@ -1,0 +1,31 @@
+name: Workflow
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+      - 'develop'
+      - 'feature/*'
+
+jobs:
+  check-gitflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener rama origen y destino
+        run: |
+          TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          
+          echo "🔍 Validando merge desde '$SOURCE_BRANCH' hacia '$TARGET_BRANCH'"
+
+          # Validar si intentan mergear a 'main' desde una rama no permitida
+          if [[ "$TARGET_BRANCH" == "main" && ! "$SOURCE_BRANCH" =~ ^(release/.+|hotfix/.+)$ ]]; then
+            echo "🚨 ERROR: Solo se puede mergear a 'main' desde 'release/*' o 'hotfix/*'."
+            exit 1
+          fi
+          
+          # Validar que las ramas sigan el flujo GitFlow
+          if [[ ! "$SOURCE_BRANCH" =~ ^(develop|feature/.+|release/.+|hotfix/.+)$ ]]; then
+            echo "🚨 ERROR: La rama '$SOURCE_BRANCH' no sigue GitFlow."
+            exit 1
+          fi
