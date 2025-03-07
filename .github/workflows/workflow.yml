@@ -1,5 +1,5 @@
 name: Workflow
-
+run-name: Workflow
 on:
   pull_request:
     branches:
