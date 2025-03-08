@@ -11,6 +11,18 @@ jobs:
   check-gitflow:
     runs-on: ubuntu-latest
     steps:
+      - name: Verificar nombre del branch
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "Branch actual: $BRANCH_NAME"
+
+          if [[ ! "$BRANCH_NAME" =~ ^(feature/|hotfix/|release/|bugfix/|develop|main)$ ]]; then
+          echo "❌ El nombre del branch no sigue la convención GitFlow."
+          exit 1
+          fi
+    
+          echo "✅ El nombre del branch es válido."
+
       - name: Obtener rama origen y destino
         run: |
           TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"

@@ -57,3 +57,21 @@ tasks.jacocoTestReport {
 		html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
 	}
 }
+
+tasks.jacocoTestCoverageVerification {
+	dependsOn(tasks.jacocoTestReport)
+	violationRules {
+		rule {
+			element = "CLASS"
+			limit {
+				counter = "LINE"
+				value = "COVEREDRATIO"
+				minimum = 1.0.toBigDecimal() // Exige 100% de cobertura
+			}
+		}
+	}
+}
+
+tasks.check {
+	dependsOn(tasks.jacocoTestCoverageVerification)
+}
