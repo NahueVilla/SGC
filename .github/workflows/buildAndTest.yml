@@ -39,7 +39,7 @@ jobs:
           run: ./gradlew build
 
         - name: Run test
-          run: ./gradlew test
+          run: ./gradlew clean test jacocoTestReport jacocoTestCoverageVerification
 
         - name: Generate JaCoCo Badge
           uses: cicirello/jacoco-badge-generator@v2
